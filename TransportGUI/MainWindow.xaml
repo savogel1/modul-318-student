@@ -7,6 +7,28 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>        
+                <ColumnDefinition/>        
+                <ColumnDefinition/>        
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Button Name="stationsButton" Content="Stationen" FontSize="30"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Button Name="connectionsButton" Content="Verbindungen" FontSize="30"/>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Button Name="stationBoardButton" Content="Abfahrtstafel" FontSize="30"/>
+            </Grid>
+
+        </Grid>
     </Grid>
 </Window>

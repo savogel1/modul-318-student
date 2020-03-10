@@ -94,5 +94,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\SwissTransport\SwissTransport.csproj">
+      <Project>{d0262178-a48f-4de0-807b-e76b63e39421}</Project>
+      <Name>SwissTransport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tests\SwissTransportTest\SwissTransportTest.csproj">
+      <Project>{959c6e54-5b1c-40f5-938a-c57b17451421}</Project>
+      <Name>SwissTransportTest</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
