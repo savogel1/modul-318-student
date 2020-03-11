@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,21 +12,21 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-
+using System.Diagnostics;
 using System.Windows.Shapes;
 using SwissTransport;
 namespace TransportGUI {
    
     public partial class MainWindow : Window {
-        private List<GroupBox> groupBoxes = new List<GroupBox>();
+        private GroupBox[] groupBoxes;
         private Transport transport = new Transport();
+        private Navigation navigation;
+
         public MainWindow() {
             InitializeComponent();
-            groupBoxes.Add(connectionsGroupBox);
-            groupBoxes.Add(stationsGroupBox);
-            groupBoxes.Add(stationBoardGroupBox);
-            switchSite(connectionsGroupBoxButton);
-            connectionsTimeComboBoxAddItems();
+            groupBoxes = new GroupBox[3] { stationsGroupBox, connectionsGroupBox, stationBoardGroupBox };
+            navigation = new Navigation(groupBoxes, connectionsTimeComboBox, connectionsGroupBoxButton);
+            navigation.startUp();
         }
 
         private void connectionsSearchButton_Click(object sender, RoutedEventArgs e) {
@@ -41,7 +42,7 @@ namespace TransportGUI {
 
             foreach (Connection connection in connections) {
                 ConnectionPoint connectionPointFrom = connection.From;
-                if (isAfterSelectedDate(selectedDate, connectionPointFrom) || selectedDate == "") {
+                if (selectedDate == "" || isAfterSelectedDate(selectedDate, connectionPointFrom)) {
                     string listBoxOutput = "";
                     listBoxOutput += "Von: " + connectionsStartComboBox.Text;
                     listBoxOutput += "      ---->       ";
@@ -79,8 +80,26 @@ namespace TransportGUI {
                 MessageBox.Show("Geben Sie mindestens drei Buchstaben zum Suchen einer Station ein!");
                 return false;
             }
-
             return true;
+        }
+
+        private void onSelect(object sender, RoutedEventArgs e) {
+            if (stationsListBox.SelectedItem != null) { 
+                stationsTextBox.Text = stationsListBox.SelectedItem.ToString();
+            }
+        }
+
+        private void stationsOpenMapButton_Click(object sender, RoutedEventArgs e) {
+            Process.Start("https://www.google.ch/maps/search/?api=1&query=" + getCoordinates());
+        }
+
+        private string getCoordinates() {
+            List<Station> stations = transport.GetStations(stationsTextBox.Text).StationList;
+            Station station = stations.Find(x => x.Name == stationsTextBox.Text);
+            station.Coordinate.XCoordinate.ToString().Replace(",", ".");
+            station.Coordinate.YCoordinate.ToString().Replace(",", ".");
+
+            return station.Coordinate.XCoordinate.ToString() + ", " + station.Coordinate.YCoordinate.ToString();
         }
 
         private void stationBoardSearchButton_Click(object sender, RoutedEventArgs e) {
@@ -117,40 +136,16 @@ namespace TransportGUI {
             connectionsEndComboBox.IsDropDownOpen = true;
         }
 
-        private void connectionsTimeComboBoxAddItems() {
-            for (int i = 00; i <= 23; i++) {
-                string timeString = "";
-                if (i < 10) {
-                    timeString = "0";
-                }
-                timeString += i + ":00";
-                connectionsTimeComboBox.Items.Add(timeString);
-            }
-        }
-
         private void stationsGroupBoxButton_Click(object sender, RoutedEventArgs e) {
-            switchSite(stationsGroupBoxButton);
+            navigation.switchSite(stationsGroupBoxButton);
         }
 
         private void connectionsGroupBoxButton_Click(object sender, RoutedEventArgs e) {
-            switchSite(connectionsGroupBoxButton);
+            navigation.switchSite(connectionsGroupBoxButton);
         }
 
         private void stationBoardGroupBoxButton_Click(object sender, RoutedEventArgs e) {
-            switchSite(stationBoardGroupBoxButton);
+            navigation.switchSite(stationBoardGroupBoxButton);
         }
-
-
-        private void switchSite(Button activatedButton) {
-
-            foreach (GroupBox groupBox in groupBoxes) {
-                if (activatedButton.Name.ToString() == groupBox.Name.ToString() + "Button") {
-                    groupBox.Visibility = Visibility.Visible;
-                } else {
-                    groupBox.Visibility = Visibility.Hidden;
-                }
-            }
-        }
-
     }
 }
