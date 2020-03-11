@@ -1,4 +1,6 @@
-﻿namespace SwissTransport
+﻿using System;
+
+namespace SwissTransport
 {
     public interface ITransport
     {
