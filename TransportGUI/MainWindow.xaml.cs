@@ -30,11 +30,12 @@ namespace TransportGUI {
         }
 
         private void connectionsSearchButton_Click(object sender, RoutedEventArgs e) {
+            bool isResultFound = false;
             try {
                 connectionsListBox.Items.Clear();
                 string selectedDate = "";
 
-                if (connectionsDatePicker.SelectedDate != null && connectionsTimeComboBox.SelectedItem != null) {
+                if ((connectionsDatePicker.SelectedDate != null) && (connectionsTimeComboBox.SelectedItem != null)) {
                     string str = connectionsDatePicker.SelectedDate.ToString().Replace("00:00:00", "");
                     selectedDate = str + connectionsTimeComboBox.SelectedItem.ToString() + ":00";
                 }
@@ -45,7 +46,7 @@ namespace TransportGUI {
 
                 foreach (Connection connection in connections) {
                     ConnectionPoint connectionPointFrom = connection.From;
-                    if (selectedDate == "" || isAfterSelectedDate(selectedDate, connectionPointFrom)) {
+                    if (isAfterSelectedDate(selectedDate, connectionPointFrom)) {
                         string listBoxOutput = "";
                         listBoxOutput += "Von: " + connectionsStartComboBox.Text;
                         listBoxOutput += "      ---->       ";
@@ -53,14 +54,19 @@ namespace TransportGUI {
                         listBoxOutput += "      Zeit: " + connectionPointFrom.Departure;
 
                         connectionsListBox.Items.Add(listBoxOutput);
+                        isResultFound = true;
                     }
                 }
             } catch (WebException) {
                 navigation.showError("Sie haben keine Internetverbindung, verbinden Sie sich mit dem Internet.");
+            } catch (FormatException) {
+                navigation.showError("Geben Sie Datum und Zeit ein.");
             } catch (Exception) {
                 navigation.showError("Geben Sie erst zwei gültige Stationen in die Eingabefelder ein, bevor Sie die Suche starten.");
             }
-
+            if (!isResultFound) {
+                connectionsListBox.Items.Add("Es wurden keine Suchergebnisse gefunden.");
+            }
         }
 
         private bool isAfterSelectedDate(string selectedDate, ConnectionPoint connectionPoint) {
@@ -74,7 +80,7 @@ namespace TransportGUI {
             bool isExceptionThrown = false;
             try {
                 stationsListBox.Items.Clear();
-                
+
                 if (stationsTextBox.Text == "") {
                     isExceptionThrown = true;
                     throw new Exception();
@@ -82,14 +88,16 @@ namespace TransportGUI {
                 List<Station> stations = transport.GetStations(stationsTextBox.Text).StationList;
 
                 foreach (Station station in stations) {
-                    stationsListBox.Items.Add(station.Name.ToString());
+                    if (station.Id != null) {
+                        stationsListBox.Items.Add(station.Name.ToString());
+                    }
                 }
             } catch (WebException) {
                 navigation.showError("Sie haben keine Internetverbindung, verbinden Sie sich mit dem Internet.");
             } catch (Exception) {
                 navigation.showError("Geben Sie erst etwas ins Eingabefeld ein, bevor Sie die Suche starten.");
             }
-            if (stationsListBox.Items.Count == 0  && isExceptionThrown == false) {
+            if (stationsListBox.Items.Count == 0 && isExceptionThrown == false) {
                 stationsListBox.Items.Add("Es wurden keine Suchergebnisse gefunden!");
             }
         }
@@ -105,7 +113,7 @@ namespace TransportGUI {
                 string coordinates = getCoordinates();
                 if (coordinates != "") {
                     Process.Start("https://www.google.ch/maps/search/?api=1&query=" + coordinates);
-                } 
+                }
             } catch (WebException) {
                 navigation.showError("Sie haben keine Internetverbindung, verbinden Sie sich mit dem Internet.");
             }
@@ -145,16 +153,8 @@ namespace TransportGUI {
             }
         }
 
-
-        private void toCompleteStartStation(object sender, KeyEventArgs e) {
-            toCompleteStation(connectionsStartComboBox);
-        }
-
-        private void toCompleteEndStation(object sender, KeyEventArgs e) {
-            toCompleteStation(connectionsEndComboBox);
-        }
-
-        private void toCompleteStation(ComboBox comboBox) {
+        private void toCompleteStation(object sender, KeyEventArgs e) {
+            var comboBox = sender as ComboBox;
             try {
                 comboBox.Items.Clear();
                 List<Station> stations = transport.GetStations(comboBox.Text).StationList;
@@ -165,7 +165,13 @@ namespace TransportGUI {
                 comboBox.IsDropDownOpen = true;
             } catch (WebException) {
                 navigation.showError("Sie haben keine Internetverbindung, verbinden Sie sich mit dem Internet.");
+            } catch (NullReferenceException) {
+                navigation.showError("Geben Sie eine gültige Station in das Eingabefeld ein.");
             }
+        }
+
+        private void closeApplication_Click(object sender, RoutedEventArgs e) {
+            this.Close();
         }
 
         private void stationsGroupBoxButton_Click(object sender, RoutedEventArgs e) {

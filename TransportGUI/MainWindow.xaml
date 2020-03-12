@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -30,7 +31,16 @@
             </Grid>
         </Grid>
 
-        <GroupBox x:Name="stationsGroupBox" FontSize="20" Margin="20,20,20,20" Grid.Row="1">
+        <Grid Grid.Row="2" Margin="0,0,35,0">
+            <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="*"/>
+             </Grid.ColumnDefinitions>
+
+            <Button x:Name="closeApplication" Content="Schliessen" Grid.Column="1" Grid.Row="2" FontSize="20"  Margin="10,10,0,20" Click="closeApplication_Click" TabIndex="10"/>
+        </Grid>
+
+                <GroupBox x:Name="stationsGroupBox" FontSize="20" Margin="20,20,20,20" Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*"/>
@@ -40,12 +50,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="80"/>
-                    <RowDefinition/>
+                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <Label Content="Stationen" Grid.Column="0" Grid.Row="0"  Margin="10,10,10,10"/>
-                <TextBox x:Name="stationsTextBox" Grid.Column="0" Grid.Row="1" Margin="10,10,0,10" TabIndex="4"/>
-                <Button x:Name="stationsSearchButton" Content="Suchen" Grid.Column="1" Grid.Row="1" Margin="0,10,10,10" Click="stationsSearchButton_Click" TabIndex="5"/>
+                <ComboBox x:Name="stationsTextBox" Grid.Column="0" Grid.Row="1" Margin="10,10,0,10" IsEditable="True" IsTextSearchEnabled="False" KeyDown="toCompleteStation" TabIndex="4"/>
+                <Button x:Name="stationsSearchButton" Content="Suchen" Grid.Column="1" Grid.Row="1" Margin="0,10,10,10" Click="stationsSearchButton_Click" IsDefault="True" TabIndex="5"/>
                 <Button x:Name="stationsOpenMapButton" Content="Google Maps" Grid.Column="1" Grid.Row="0" Margin="0,10,10,10" Click="stationsOpenMapButton_Click" TabIndex="7"/>
                 <ListBox x:Name="stationsListBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Margin="10,10,10,10" SelectionChanged="onSelect" TabIndex="6"/>
             </Grid>
@@ -72,16 +82,16 @@
                     </Grid.RowDefinitions>
 
                     <Label Content="Zeit" Margin="10,0,0,0"/>
-                    <ComboBox x:Name="connectionsTimeComboBox" Grid.Column="3" Grid.Row="1" Margin="10,0,10,10"/>
+                    <ComboBox x:Name="connectionsTimeComboBox" Grid.Column="3" Grid.Row="1" Margin="10,0,10,10" TabIndex="8"/>
                 </Grid>
 
                 <Label Content="Startstation" Grid.Column="0" Grid.Row="0" Margin="10,10,10,10"/>
                 <Label Content="Endstation" Grid.Column="1" Grid.Row="0" Margin="10,10,10,10"/>
                 <DatePicker x:Name="connectionsDatePicker" Grid.Column="3" Grid.Row="0" Margin="10,10,10,10" FontSize="15" TabIndex="7"/>
-                <ComboBox x:Name="connectionsStartComboBox" IsEditable="True" Grid.Column="0" Grid.Row="1" Margin="10,10,10,10" IsTextSearchEnabled="False" KeyDown="toCompleteStartStation" TabIndex="4"/>
-                <ComboBox x:Name="connectionsEndComboBox" IsEditable="True" Grid.Column="1" Grid.Row="1" Margin="10,10,10,10" IsTextSearchEnabled="False" KeyDown="toCompleteEndStation" TabIndex="5"/>
-                <Button x:Name="connectionsSearchButton" Content="Suchen" Grid.Column="2" Grid.Row="1" Margin="10,10,10,10" Click="connectionsSearchButton_Click" TabIndex="6"/>
-                <ListBox x:Name="connectionsListBox" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="2" Margin="10,10,10,10" TabIndex="8"/>
+                <ComboBox x:Name="connectionsStartComboBox" IsEditable="True" Grid.Column="0" Grid.Row="1" Margin="10,10,10,10" IsTextSearchEnabled="False" KeyDown="toCompleteStation" TabIndex="4"/>
+                <ComboBox x:Name="connectionsEndComboBox" IsEditable="True" Grid.Column="1" Grid.Row="1" Margin="10,10,10,10" IsTextSearchEnabled="False" KeyDown="toCompleteStation" TabIndex="5"/>
+                <Button x:Name="connectionsSearchButton" Content="Suchen" Grid.Column="2" Grid.Row="1" Margin="10,10,10,10" Click="connectionsSearchButton_Click" IsDefault="True" TabIndex="6"/>
+                <ListBox x:Name="connectionsListBox" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="2" Margin="10,10,10,10" TabIndex="9"/>
             </Grid>
         </GroupBox>
 
@@ -98,8 +108,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Content="Abfahrtstafel" Grid.Column="0" Grid.Row="0" Margin="10,10,10,10"/>
-                <TextBox x:Name="stationBoardTextBox" Grid.Column="0" Grid.Row="1" Margin="10,10,0,10"  TabIndex="4"/>
-                <Button x:Name="stationBoardSearchButton" Content="Suchen" Grid.Column="1" Grid.Row="1" Margin="0,10,10,10" Click="stationBoardSearchButton_Click" TabIndex="5"/>
+                <ComboBox x:Name="stationBoardTextBox" Grid.Column="0" Grid.Row="1" Margin="10,10,0,10" IsEditable="True" IsTextSearchEnabled="False" KeyDown="toCompleteStation" TabIndex="4"/>
+                <Button x:Name="stationBoardSearchButton" Content="Suchen" Grid.Column="1" Grid.Row="1" Margin="0,10,10,10" Click="stationBoardSearchButton_Click" IsDefault="True" TabIndex="5"/>
                 <ListBox x:Name="stationBoardListBox" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Margin="10,10,10,10" TabIndex="6"/>
             </Grid>
         </GroupBox>
