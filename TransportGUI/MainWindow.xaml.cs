@@ -160,7 +160,9 @@ namespace TransportGUI {
                 List<Station> stations = transport.GetStations(comboBox.Text).StationList;
 
                 foreach (Station station in stations) {
-                    comboBox.Items.Add(station.Name.ToString());
+                    if (station.Id != null) {
+                        comboBox.Items.Add(station.Name.ToString());
+                    }
                 }
                 comboBox.IsDropDownOpen = true;
             } catch (WebException) {
