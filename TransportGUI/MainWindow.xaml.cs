@@ -147,28 +147,22 @@ namespace TransportGUI {
 
 
         private void toCompleteStartStation(object sender, KeyEventArgs e) {
-            try {
-                connectionsStartComboBox.Items.Clear();
-                List<Station> stations = transport.GetStations(connectionsStartComboBox.Text).StationList;
-
-                foreach (Station station in stations) {
-                    connectionsStartComboBox.Items.Add(station.Name.ToString());
-                }
-                connectionsStartComboBox.IsDropDownOpen = true;
-            } catch (WebException) {
-                navigation.showError("Sie haben keine Internetverbindung, verbinden Sie sich mit dem Internet.");
-            }
+            toCompleteStation(connectionsStartComboBox);
         }
 
         private void toCompleteEndStation(object sender, KeyEventArgs e) {
+            toCompleteStation(connectionsEndComboBox);
+        }
+
+        private void toCompleteStation(ComboBox comboBox) {
             try {
-                connectionsEndComboBox.Items.Clear();
-                List<Station> stations = transport.GetStations(connectionsEndComboBox.Text).StationList;
+                comboBox.Items.Clear();
+                List<Station> stations = transport.GetStations(comboBox.Text).StationList;
 
                 foreach (Station station in stations) {
-                    connectionsEndComboBox.Items.Add(station.Name.ToString());
+                    comboBox.Items.Add(station.Name.ToString());
                 }
-                connectionsEndComboBox.IsDropDownOpen = true;
+                comboBox.IsDropDownOpen = true;
             } catch (WebException) {
                 navigation.showError("Sie haben keine Internetverbindung, verbinden Sie sich mit dem Internet.");
             }
