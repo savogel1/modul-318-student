@@ -35,6 +35,11 @@ namespace TransportGUI {
             }
         }
 
+        public void showError(string message) {
+            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+
         private void connectionsTimeComboBoxAddItems() {
             for (int i = 00; i <= 23; i++) {
                 string timeString = "";
